@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.miage.intervenantservice.control.IntervenantAssembler;
 import org.miage.intervenantservice.entity.Intervenant;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -26,15 +27,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class IntervenantRepresentation {
 
     private final IntervenantResource ir;
-
-    public IntervenantRepresentation(IntervenantResource ir) {
+    private final IntervenantAssembler ia;
+    
+    public IntervenantRepresentation(IntervenantResource ir, IntervenantAssembler ia) {
         this.ir = ir;
+        this.ia = ia;
     }
 
     // GET all
     @GetMapping
     public ResponseEntity<?> getAllIntervenants() {
-        return ResponseEntity.ok(ir.findAll());
+        return ResponseEntity.ok(ia.toCollectionModel(ir.findAll()));
     }
 
     // GET one
@@ -42,7 +45,7 @@ public class IntervenantRepresentation {
     public ResponseEntity<?> getIntervenantById(@PathVariable("intervenantId") String id) {
         return Optional.of(ir.findById(id))
                 .filter(Optional::isPresent)
-                .map(i -> ResponseEntity.ok(i.get()))
+                .map(i -> ResponseEntity.ok(ia.toModel(i.get())))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -86,4 +89,8 @@ public class IntervenantRepresentation {
         ir.save(toSave);
         return ResponseEntity.ok().build();
     }
+
+    //PATCH
+
+
 }
