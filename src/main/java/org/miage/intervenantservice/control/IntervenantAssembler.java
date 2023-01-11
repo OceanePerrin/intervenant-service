@@ -17,8 +17,10 @@ public class IntervenantAssembler implements RepresentationModelAssembler<Interv
     @Override
     public EntityModel<Intervenant> toModel(Intervenant intervenant) {
         return EntityModel.of(intervenant,
-                linkTo(methodOn(IntervenantRepresentation.class).getIntervenantById(intervenant.getId())).withSelfRel(),
-                linkTo(methodOn(IntervenantRepresentation.class).getAllIntervenants()).withRel("collection"));
+                linkTo(methodOn(IntervenantRepresentation.class)
+                    .getIntervenantById(intervenant.getId())).withSelfRel(),
+                linkTo(methodOn(IntervenantRepresentation.class)
+                    .getAllIntervenants()).withRel("collection"));
     }
 
     @Override
